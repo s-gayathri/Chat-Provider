@@ -12,6 +12,10 @@ const events = require('./constants');
 // Initialize map to store the users that are online
 const users = new Map();
 
+app.get('/', (req, res) => {
+    res.send("Server is running.")
+});
+
 io.sockets.on(events.ON_CONNECT, (socket) => {
     initializeOnConnect(socket);
 });
@@ -27,6 +31,7 @@ const initializeOnConnect = (socket) => {
     });
     console.log(`NEW USER ADDED - TOTAL NO. OF USERS ${users.size}`);
 
+    socket.join(userID);
     // When the users sends a message
     onMessage(socket); 
     // When the user logs out
@@ -44,24 +49,30 @@ const onMessage = (socket) => {
 }
 
 const individualChatHandler = (socket, message) => {
-    let to = message.to;
-    let from = message.from;
+    let toID = message.toID;
+    let fromID = message.fromID;
     let content = message.content;
-    let toSocketID = getSocketID(to);
+    let toSocketID = getSocketID(toID);
+
+    let response = {
+        'content': content,
+        'senderID': fromID,
+        'recipientID': toID
+    };
 
     // Check if the other person is online
     let isOnline = (toSocketID == undefined) ? false : true;
-    console.log(`CHAT From-${from} To-${to} is Online-${isOnline} Message-${content}`);
+    console.log(`CHAT From-${fromID} To-${toID} is Online-${isOnline} Message-${content}`);
 
     // Store in database
 
     // Send message
     message.status = isOnline ? events.STATUS_CODE_MESSAGE_SENT : STATUS_CODE_MESSAGE_NOT_SENT;
     message.recipientIsOnline = isOnline;
-    sendToSelf(socket, events.MESSAGE_FROM_SERVER, content);
+    sendToSelf(socket, events.MESSAGE_FROM_SERVER, response);
 
     if(isOnline == true)
-        sendToOther(socket, events.RECEIVE_MESSAGE, toSocketID, content);
+        sendToOther(socket, events.RECEIVE_MESSAGE, toSocketID, response);
 }
 
 const groupChatHandler = (socket, message) => {
@@ -77,11 +88,11 @@ const sendToSelf = (socket, event, message) => {
 }
 
 const sendToOther = (socket, event, toSocketID, message) => {
-    socket.to(`${toSocketID}`).emit(event, message);
+    socket.in(toSocketID).emit(event, message);
 }
 
 const sendToAll = (socket, event, groupID, message) => {
-    socket.in(`${groupID}`).emit(event, message);
+    socket.in(groupID).emit(event, message);
 }
 
 const getSocketID = (userID) => {
@@ -99,7 +110,10 @@ const disposeOnDisconnect = (socket) => {
         socket.removeAllListeners(events.ON_DISCONNECT);
         for(const [key, value] of Object.entries(users)) 
             if(value.socketID == socket.id)
-                users.delete(key);
+                {
+                    users.delete(key);  // user is no longer online
+                    socket.leave(key);
+                }
         console.log(`USER REMOVED - TOTAL NO. OF USERS ${users.size}`);
     });
 }
