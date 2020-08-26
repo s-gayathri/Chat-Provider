@@ -14,7 +14,7 @@ class _ChatPageState extends State<ChatPage> {
   double height, width;
   TextEditingController textController;
   ScrollController scrollController;
-
+// https://chatapp2690.herokuapp.com/
   @override
   void initState() {
     //Initializing the message list
@@ -24,7 +24,7 @@ class _ChatPageState extends State<ChatPage> {
     scrollController = ScrollController();
     //Creating the socket
     socketIO = SocketIOManager().createSocketIO(
-      'https://chatapp2690.herokuapp.com/',
+      'http://localhost:8080',
       '/',
     );
     //Call init before doing anything with socket
