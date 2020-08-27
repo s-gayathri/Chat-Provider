@@ -28,15 +28,16 @@
           query:{roomID:"2002"}
 
       });
-
-      socket.emit("send_message", {
+      const response=JSON.parse ({
         receiverChatID: "2002",
         senderChatID: "2002",
         content: "helo"
-      })
+      });
+      socket.emit("send_message",response)
 
       socket.on("receive_message",(res)=>{
-        document.write(res.content );
+
+        document.write(res.content);
       }
 
       )
