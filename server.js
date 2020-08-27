@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 // Importing user-defined events for socket as a map
 const events = require('./constants');
 
- const users = new Map();//******actually stores ROOMS
+const rooms = new Map();//** stores ROOMS
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/index1.html");
@@ -34,23 +34,23 @@ const initializeOnConnect = (socket) => {
     var roomID = socket.handshake.query.roomID;
 
     // Add user to the list
-    if (users.get(roomID)) {
+    if (rooms.get(roomID)) {
 
-        arr = users.get(roomID);
+        arr = rooms.get(roomID);
         arr.push({
             socketID: socket.id
         });
 
-        users.set(roomID, arr);
+        rooms.set(roomID, arr);
     } else {
-        users.set(roomID, [{
+        rooms.set(roomID, [{
             socketID: socket.id
         }]);
     }
 
 
-    console.log(users);
-    console.log(`NEW USER ADDED - TOTAL NO. OF ROOMS ${users.size}`);
+    console.log(rooms);
+    console.log(`NEW USER ADDED - TOTAL NO. OF ROOMS ${rooms.size}`);
 
     socket.join(roomID);
     // When the users sends a message
@@ -60,8 +60,9 @@ const initializeOnConnect = (socket) => {
 }
 
 const onMessage = (socket) => {
+    console.log("yo out",socket.rooms);
     socket.on('send_message', (message) => {
-
+        console.log("yo in ");
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
         let content = message.content;
@@ -78,11 +79,11 @@ const onMessage = (socket) => {
         // Store in database
 
         // Send message
-        message.status = isOnline ? events.STATUS_CODE_MESSAGE_SENT : STATUS_CODE_MESSAGE_NOT_SENT;
-        message.recipientIsOnline = isOnline;
+        message.status = check_online ? events.STATUS_CODE_MESSAGE_SENT : STATUS_CODE_MESSAGE_NOT_SENT;
+        message.recipientIsOnline = check_online;
 
         if(check_online)
-            io.sockets.in(toID).emit('send_message', response)
+            io.sockets.in(toID).emit('receive_message', response);
     })
     // socket.on(events.INDIVIDUAL_CHAT_MESSAGE, (message) => {
     //     individualChatHandler(socket, message);
@@ -92,6 +93,56 @@ const onMessage = (socket) => {
     //     groupChatHandler(socket, message);
     // });
 }
+
+
+const checkOnline = (roomID) => {
+    let temp = rooms.get(roomID);
+    console.log(temp);
+    if (temp == undefined || temp.length==0)//if no sockets, then no room
+        return false;
+
+    return true;
+}
+
+const disposeOnDisconnect = (socket) => {
+    socket.on(events.ON_DISCONNECT, () => {
+        console.log(`USER DISCONNECTED with socketID ${socket.id}`);
+        // socket.removeAllListeners(events.ON_DISCONNECT);
+        if (rooms.size != 0) {
+            
+            for (let [key, value] of rooms) {
+                // console.log(key, value);
+                value.forEach((obj) => {
+                    if (obj.socketID == socket.id) {
+                        let array1 = rooms.get(key);
+                        array1.pop({
+                            socketID: socket.id
+                        });
+                        if (array1.length == 0) {
+                            rooms.delete(key); // user is no longer online
+                            socket.leave(key);
+                        } else
+                            rooms.set(key, array1);
+                    }
+
+
+                })
+            }
+        }
+
+
+
+        console.log(rooms);
+        console.log(`USER REMOVED - TOTAL NO. OF ROOMS ${rooms.size}`);
+
+    });
+
+}
+
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
 
 // const individualChatHandler = (socket, message) => {
 //     let toID = message.toID;
@@ -139,51 +190,3 @@ const onMessage = (socket) => {
 // const sendToAll = (socket, event, groupID, message) => {
 //     socket.in(groupID).emit(event, message);
 // }
-
-const checkOnline = (roomID) => {
-    let temp = users.get(roomID);
-    console.log(temp);
-    if (temp == undefined || temp.length==0)//if no sockets, then no room
-        return false;
-
-    return true;
-}
-
-const disposeOnDisconnect = (socket) => {
-    socket.on(events.ON_DISCONNECT, () => {
-        console.log(`USER DISCONNECTED with socketID ${socket.id}`);
-        // socket.removeAllListeners(events.ON_DISCONNECT);
-        if (users.size != 0) {
-            
-            for (let [key, value] of users) {
-                // console.log(key, value);
-                value.forEach((obj) => {
-                    if (obj.socketID == socket.id) {
-                        let array1 = users.get(key);
-                        array1.pop({
-                            socketID: socket.id
-                        });
-                        if (array1.length == 0) {
-                            users.delete(key); // user is no longer online
-                            socket.leave(key);
-                        } else
-                            users.set(key, array1);
-                    }
-
-
-                })
-            }
-        }
-
-
-
-        console.log(users);
-        console.log(`USER REMOVED - TOTAL NO. OF ROOMS ${users.size}`);
-
-    });
-
-}
-
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
