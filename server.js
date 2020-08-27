@@ -82,8 +82,9 @@ const onMessage = (socket) => {
         message.status = check_online ? events.STATUS_CODE_MESSAGE_SENT : STATUS_CODE_MESSAGE_NOT_SENT;
         message.recipientIsOnline = check_online;
 
-        if(check_online)
+        if(check_online){ 
             io.sockets.in(toID).emit('receive_message', response);
+        }
     })
     // socket.on(events.INDIVIDUAL_CHAT_MESSAGE, (message) => {
     //     individualChatHandler(socket, message);
