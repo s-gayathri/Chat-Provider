@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget {
+  final String title;
+  final String subtitle;
+
+  CustomAppBar({this.title, this.subtitle});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,12 +20,8 @@ class CustomAppBar extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              Icons.arrow_back_ios,
+            BackButton(
               color: Colors.white,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.05,
             ),
             Container(
               height: MediaQuery.of(context).size.width / 7,
@@ -43,14 +44,14 @@ class CustomAppBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hostels',
+                  title,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                   ),
                 ),
                 Text(
-                  'in "MIT Boston"',
+                  subtitle,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 13,
@@ -59,14 +60,14 @@ class CustomAppBar extends StatelessWidget {
               ],
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.2,
+              width: MediaQuery.of(context).size.width * 0.25,
             ),
             Icon(
               Icons.search,
               color: Colors.white,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.1,
+              width: MediaQuery.of(context).size.width * 0.05,
             ),
             Icon(
               Icons.menu,

@@ -21,12 +21,33 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController myController = TextEditingController();
   final User contact;
   final Group group;
+  String content;
+  String roomID;
 
   _ChatPageState({this.contact, this.group});
 
+  void onTextChange() {
+    setState(() {
+      content = myController.text;
+    });
+  }
+
+  @override
+  void initState() {
+    roomID = (group == null) ? contact.userID : group.groupID;
+
+    myController.addListener(onTextChange);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(group);
     return SafeArea(
       child: Column(
         children: [
@@ -62,7 +83,7 @@ class _ChatPageState extends State<ChatPage> {
               topRight: Radius.circular(15),
               bottomRight: Radius.circular(15),
             ),
-            color: message.senderID == this.contact.userID
+            color: message.senderID == contact.userID
                 ? const Color(0x0f1f6b9c)
                 : const Color(0xee0a6da8),
           ),
@@ -103,9 +124,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget getMessagesInChat() {
     return ScopedModelDescendant<ChatModel>(
       builder: (context, child, model) {
-        List<Message> messages = (group == null)
-            ? model.getMessagesForUserID(this.contact.userID)
-            : model.getMessagesForUserID(this.group.groupID);
+        List<Message> messages = model.getMessagesForID(roomID);
 
         return Container(
           height: MediaQuery.of(context).size.height * 0.75,
@@ -128,13 +147,23 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               Icon(Icons.attach_file),
               Container(
-                width: MediaQuery.of(context).size.width * 0.8,
+                margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                width: MediaQuery.of(context).size.width * 0.7,
                 child: TextField(
                   controller: myController,
                 ),
               ),
               Icon(Icons.mic_none),
-              Icon(Icons.send),
+              IconButton(
+                // iconSize: 0,
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  model.sendMessage(content, roomID);
+                  setState(() {
+                    myController.text = '';
+                  });
+                },
+              ),
             ],
           ),
         );

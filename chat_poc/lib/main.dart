@@ -8,7 +8,9 @@ void main() {
     model: ChatModel(),
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: MainPage(
+        category: "hostels",
+      ),
     ),
   ));
 }
