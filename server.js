@@ -12,9 +12,9 @@ const events = require('./constants');
 const rooms = new Map();//** stores ROOMS
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + "/index1.html");
+    res.send("Server is running");
 
-    console.log("hey");
+    // console.log("hey");
 
 
 });
@@ -29,7 +29,7 @@ io.on("connection", (socket) => {
 const initializeOnConnect = (socket) => {
     // When a user logs in
 
-    console.log(`NEW USER: ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
+    // console.log(`NEW USER: ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
 
     var roomID = socket.handshake.query.roomID;
 
@@ -49,8 +49,8 @@ const initializeOnConnect = (socket) => {
     }
 
 
-    console.log(rooms);
-    console.log(`NEW USER ADDED - TOTAL NO. OF ROOMS ${rooms.size}`);
+    // console.log(rooms);
+    // console.log(`NEW USER ADDED - TOTAL NO. OF ROOMS ${rooms.size}`);
 
     socket.join(roomID);
     // When the users sends a message
@@ -60,9 +60,9 @@ const initializeOnConnect = (socket) => {
 }
 
 const onMessage = (socket) => {
-    console.log("yo out",socket.rooms);
+    // console.log("yo out",socket.rooms);
     socket.on('send_message', (message) => {
-        console.log("yo in ");
+        // console.log("yo in ");
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
         let content = message.content;
@@ -74,7 +74,7 @@ const onMessage = (socket) => {
             'recipientID': toID
         };
         
-        console.log(`CHAT From-${fromID} To-${toID} is Online-${check_online} Message-${content}`);
+        // console.log(`CHAT From-${fromID} To-${toID} is Online-${check_online} Message-${content}`);
 
         // Store in database
 
@@ -98,7 +98,7 @@ const onMessage = (socket) => {
 
 const checkOnline = (roomID) => {
     let temp = rooms.get(roomID);
-    console.log(temp);
+    // console.log(temp);
     if (temp == undefined || temp.length==0)//if no sockets, then no room
         return false;
 
@@ -107,7 +107,7 @@ const checkOnline = (roomID) => {
 
 const disposeOnDisconnect = (socket) => {
     socket.on(events.ON_DISCONNECT, () => {
-        console.log(`USER DISCONNECTED with socketID ${socket.id}`);
+        // console.log(`USER DISCONNECTED with socketID ${socket.id}`);
         // socket.removeAllListeners(events.ON_DISCONNECT);
         if (rooms.size != 0) {
             
@@ -133,15 +133,15 @@ const disposeOnDisconnect = (socket) => {
 
 
 
-        console.log(rooms);
-        console.log(`USER REMOVED - TOTAL NO. OF ROOMS ${rooms.size}`);
+        // console.log(rooms);
+        // console.log(`USER REMOVED - TOTAL NO. OF ROOMS ${rooms.size}`);
 
     });
 
 }
 
 server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    // console.log(`Server is running on port ${PORT}`);
 });
 
 
