@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:chat_poc/models/Examples.dart';
 import 'package:chat_poc/models/Group.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-// import 'dart:convert';
 
 import './User.dart';
 import './Message.dart';
 
 class ChatModel extends Model {
+  // IO.Socket socket;
+
   List<User> users = Examples.users;
 
   User currentUser;
@@ -23,10 +27,29 @@ class ChatModel extends Model {
     contacts =
         users.where((user) => user.userID != currentUser.userID).toList();
 
-    IO.Socket socket = IO.io('http://localhost:3001', <String, dynamic>{
-      'transports': ['websocket'],
-      'query': 'chatID=${currentUser.userID}',
-    });
+    // socket =
+    //     IO.io('https://calm-savannah-01592.herokuapp.com', <String, dynamic>{
+    //   'transports': ['websocket'],
+    //   'query': json.encode({"roomID": "1001"}),
+    // });
+
+    // socket.on("receive_message", (response) {
+    //   Map<String, dynamic> data = json.decode(response);
+    //   messages.add(Message(
+    //     content: data["content"],
+    //     senderID: data["senderChatID"],
+    //     recipientID: data["receiverChatID"],
+    //     time: DateFormat.jm().format(DateTime.now()),
+    //   ));
+
+    notifyListeners();
+    // });
+
+    // socket.connect();
+
+    // socket.on('connect', (data) {
+    //   print("Connection Initiated: $data");
+    // });
   }
 
   void sendMessage(String text, String recipientID) {
@@ -34,22 +57,26 @@ class ChatModel extends Model {
       content: text,
       senderID: currentUser.userID,
       recipientID: recipientID,
+      time: DateFormat.jm().format(DateTime.now()),
     ));
 
-    // socketIO.sendMessage(
-    //   'send_message',
-    //   json.encode({
-    //     'recipientID': recipientID,
-    //     'senderChatID': currentUser.chatID,
-    //     'content': text,
-    //   }),
-    // );
+    // socket.emit(
+    //     "send_message",
+    //     json.encode({
+    //       'receiverChatID': recipientID,
+    //       'senderChatID': currentUser.userID,
+    //       'content': text,
+    //       'time': DateFormat.jm().format(DateTime.now()),
+    //     }));
+
     notifyListeners();
   }
 
-  List<Message> getMessagesForUserID(String chatID) {
+  List<Message> getMessagesForID(String chatID) {
     return messages
-        .where((msg) => msg.senderID == chatID || msg.recipientID == chatID)
+        .where((msg) =>
+            msg.isGroup == false && //individual
+            (msg.senderID == chatID || msg.recipientID == chatID))
         .toList();
   }
 }
