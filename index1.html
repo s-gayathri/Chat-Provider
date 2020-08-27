@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Socket.IO Chat Example</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+ </head>
 <body>
   <ul class="pages">
     <li class="chat page">
@@ -24,20 +23,26 @@
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script >
+    $(function(){
       const socket=io({
-          query:{
-              roomID:"2002"
-
-          }
+          query:{roomID:"2002"}
 
       });
 
-      socket.on("send_message",
-      json.encode({
+      socket.emit("send_message", {
         receiverChatID: "2002",
         senderChatID: "2002",
         content: "helo"
-      }))
+      })
+
+      socket.on("receive_message",(res)=>{
+        document.write(res.content );
+      }
+
+      )
+
+    })
+      
 
       
 
