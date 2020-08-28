@@ -71,10 +71,10 @@ const onMessage = (socket) => {
         // let check_online = checkOnline(toID);
 
         let response = {
-            'content': content,
-            'senderID': fromID,
-            'recipientID': toID,
-            'time':time
+            "content": content,
+            "senderChatID": fromID,
+            "receiverChatID": toID,
+            "time":time
         } ;
         
         // console.log(`CHAT From-${fromID} To-${toID} is Online-${check_online} Message-${content}`);

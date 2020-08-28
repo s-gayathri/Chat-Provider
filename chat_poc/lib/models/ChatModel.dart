@@ -58,6 +58,7 @@ class ChatModel extends Model {
     // });
 
     socketIO.subscribe('receive_message', (jsonData) {
+      print (jsonData);
       Map<String, dynamic> data = json.decode(jsonData);
       messages.add(Message(
         content: data["content"],
@@ -111,8 +112,7 @@ class ChatModel extends Model {
   }
 
   List<Message> getMessagesForID(String chatID) {
-    return messages
-        .where((msg) =>
+    return messages.where((msg) =>
             msg.isGroup == false && //individual
             (msg.senderID == chatID || msg.recipientID == chatID))
         .toList();
