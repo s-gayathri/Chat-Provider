@@ -63,7 +63,7 @@ const onMessage = (socket) => {
     // console.log("yo out",socket.rooms);
     socket.on('send_message', (msg) => {
         // console.log("yo in ");
-        let message=msg.decode(msg);
+        let message=json.decode(msg);
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
         let content = message.content;
