@@ -30,7 +30,7 @@ class ChatModel extends Model {
         users.where((user) => user.userID != currentUser.userID).toList();
 
     socketIO = SocketIOManager().createSocketIO(
-        '<ENTER_YOUR_SERVER_URL_HERE>', '/',
+        'https://calm-savannah-01592.herokuapp.com/', '/',
         query: 'roomID=${currentUser.userID}');
     socketIO.init();
 

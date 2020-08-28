@@ -31,7 +31,7 @@ const initializeOnConnect = (socket) => {
 
     // console.log(`NEW USER: ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
 
-    var roomID = JSON.stringify(socket.handshake.query).roomID;
+    var roomID =  socket.handshake.query.roomID;
 
     // Add user to the list
     // if (rooms.get(roomID)) {
