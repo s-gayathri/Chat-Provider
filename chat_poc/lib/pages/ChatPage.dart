@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:chat_poc/models/User.dart';
@@ -38,7 +39,7 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     // print('${contact1.name} ${contact2.name}');
     roomID = (group == null) ? contact2.userID : group.groupID;
-
+    Provider.of<ChatModel>(context, listen: false).init();
     myController.addListener(onTextChange);
     super.initState();
   }
@@ -125,8 +126,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget getMessagesInChat() {
-    return ScopedModelDescendant<ChatModel>(
-      builder: (context, child, model) {
+    return Consumer<ChatModel>(
+      builder: (context, model, child) {
         List<Message> messages = model.getMessagesForID(roomID);
 
         return Container(
@@ -142,8 +143,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget buildChatArea() {
-    return ScopedModelDescendant<ChatModel>(
-      builder: (context, child, model) {
+    return Consumer<ChatModel>(
+      builder: (context, model, child) {
         return Container(
           color: Colors.white,
           child: Row(
