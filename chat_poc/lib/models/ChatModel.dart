@@ -25,7 +25,7 @@ class ChatModel extends Model {
   Group group = Examples.group;
 
   void init() {
-    currentUser = users[0]; // run as 1 2 3 in different devices
+    currentUser = users[1]; // run as 1 2 3 in different devices
     contacts =
         users.where((user) => user.userID != currentUser.userID).toList();
 
