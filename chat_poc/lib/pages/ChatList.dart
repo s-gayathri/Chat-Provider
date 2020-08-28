@@ -24,7 +24,7 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    ScopedModel.of<ChatModel>(context, rebuildOnChange: false).init();
+    // ScopedModel.of<ChatModel>(context, rebuildOnChange: true).init();
   }
 
   @override

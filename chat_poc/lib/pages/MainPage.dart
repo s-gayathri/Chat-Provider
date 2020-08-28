@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chat_poc/models/ChatModel.dart';
 import 'package:flutter/material.dart';
 
@@ -34,8 +36,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       print('Tab Controller index ${_tabController.index}');
     });
     // category = ModalRoute.of(context).settings.arguments;
+    ScopedModel.of<ChatModel>(context, rebuildOnChange: false).init();
+    // ChatModel.of(context).init();
     super.initState();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   ScopedModel.of<ChatModel>(context, rebuildOnChange: true).init();
+  // }
 
   @override
   void dispose() {
@@ -47,6 +57,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ChatModel>(builder: (context, child, model) {
       // print(model.currentUser);
+      // var model = ChatModel.of(context);
+
       return Scaffold(
         bottomNavigationBar: CustomBottomBar(),
         appBar: PreferredSize(
@@ -75,8 +87,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ChatList(category: category),
             ChatPage(
               // group: Group(name: 'Hostels', groupID: "999"),
-              contact1: Examples.users[0],
-              contact2: Examples.users[1],
+              contact1: Examples.users[1],
+              contact2: Examples.users[0],
             ),
             Center(child: Text('This is the Plugins tab')),
           ],

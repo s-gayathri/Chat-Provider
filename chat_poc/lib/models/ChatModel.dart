@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chat_poc/models/Examples.dart';
 import 'package:chat_poc/models/Group.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 import 'package:intl/intl.dart';
@@ -25,8 +26,11 @@ class ChatModel extends Model {
 
   Group group = Examples.group;
 
+  static ChatModel of(BuildContext context) =>
+      ScopedModel.of<ChatModel>(context, rebuildOnChange: true);
+
   void init() {
-    currentUser = users[0]; // run as 1 2 3 in different devices
+    currentUser = users[1]; // run as 1 2 3 in different devices
 
     print('CURRENT USER: ${currentUser.userID}');
 
@@ -59,12 +63,14 @@ class ChatModel extends Model {
 
     socketIO.subscribe('receive_message', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);
+      print(data);
       messages.add(Message(
         content: data["content"],
         senderID: data["senderChatID"],
         recipientID: data["receiverChatID"],
         time: DateFormat.jm().format(DateTime.now()),
       ));
+      print(messages);
 
       notifyListeners();
     });
