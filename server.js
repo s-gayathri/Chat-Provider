@@ -31,22 +31,22 @@ const initializeOnConnect = (socket) => {
 
     // console.log(`NEW USER: ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
 
-    var roomID = socket.handshake.query.roomID;
+    var roomID = JSON.stringify(socket.handshake.query).roomID;
 
     // Add user to the list
-    if (rooms.get(roomID)) {
+    // if (rooms.get(roomID)) {
 
-        arr = rooms.get(roomID);
-        arr.push({
-            socketID: socket.id
-        });
+    //     arr = rooms.get(roomID);
+    //     arr.push({
+    //         socketID: socket.id
+    //     });
 
-        rooms.set(roomID, arr);
-    } else {
-        rooms.set(roomID, [{
-            socketID: socket.id
-        }]);
-    }
+    //     rooms.set(roomID, arr);
+    // } else {
+    //     rooms.set(roomID, [{
+    //         socketID: socket.id
+    //     }]);
+    // }
 
 
     // console.log(rooms);
@@ -56,37 +56,38 @@ const initializeOnConnect = (socket) => {
     // When the users sends a message
     onMessage(socket);
     // When the user logs out
-    disposeOnDisconnect(socket);
+    disposeOnDisconnect(socket,roomID);
 }
 
 const onMessage = (socket) => {
     // console.log("yo out",socket.rooms);
-    socket.on('send_message', (message) => {
+    socket.on('send_message', (msg) => {
         // console.log("yo in ");
+        let message=msg.decode(msg);
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
         let content = message.content;
         let time=message.time;
-        let check_online = checkOnline(toID);
+        // let check_online = checkOnline(toID);
 
-        let response = {
+        let response = json.encode({
             'content': content,
             'senderID': fromID,
             'recipientID': toID,
             'time':time
-        };
+        });
         
         // console.log(`CHAT From-${fromID} To-${toID} is Online-${check_online} Message-${content}`);
 
         // Store in database
 
         // Send message
-        message.status = check_online ? events.STATUS_CODE_MESSAGE_SENT : STATUS_CODE_MESSAGE_NOT_SENT;
-        message.recipientIsOnline = check_online;
+        // message.status = check_online ? events.STATUS_CODE_MESSAGE_SENT : STATUS_CODE_MESSAGE_NOT_SENT;
+        // message.recipientIsOnline = check_online;
 
-        if(check_online){ 
+        // if(check_online){ 
             io.sockets.in(toID).emit('receive_message', response);
-        }
+        // }
     })
     // socket.on(events.INDIVIDUAL_CHAT_MESSAGE, (message) => {
     //     individualChatHandler(socket, message);
@@ -107,31 +108,32 @@ const checkOnline = (roomID) => {
     return true;
 }
 
-const disposeOnDisconnect = (socket) => {
+const disposeOnDisconnect = (socket,roomID) => {
     socket.on(events.ON_DISCONNECT, () => {
+        socket.leave(roomID);
         // console.log(`USER DISCONNECTED with socketID ${socket.id}`);
         // socket.removeAllListeners(events.ON_DISCONNECT);
-        if (rooms.size != 0) {
+        // if (rooms.size != 0) {
             
-            for (let [key, value] of rooms) {
-                // console.log(key, value);
-                value.forEach((obj) => {
-                    if (obj.socketID == socket.id) {
-                        let array1 = rooms.get(key);
-                        array1.pop({
-                            socketID: socket.id
-                        });
-                        if (array1.length == 0) {
-                            rooms.delete(key); // user is no longer online
-                            socket.leave(key);
-                        } else
-                            rooms.set(key, array1);
-                    }
+        //     for (let [key, value] of rooms) {
+        //         // console.log(key, value);
+        //         value.forEach((obj) => {
+        //             if (obj.socketID == socket.id) {
+        //                 let array1 = rooms.get(key);
+        //                 array1.pop({
+        //                     socketID: socket.id
+        //                 });
+        //                 if (array1.length == 0) {
+        //                     rooms.delete(key); // user is no longer online
+        //                     socket.leave(key);
+        //                 } else
+        //                     rooms.set(key, array1);
+        //             }
 
 
-                })
-            }
-        }
+        //         })
+        //     }
+        // }
 
 
 

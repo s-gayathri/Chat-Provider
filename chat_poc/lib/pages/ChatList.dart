@@ -1,11 +1,11 @@
-import 'package:chat_poc/models/Examples.dart';
-// import 'package:chat_poc/models/Group.dart';
-import 'package:chat_poc/pages/MainPage.dart';
+import '../models/Examples.dart';
+// import './models/Group.dart';
+import '../pages/MainPage.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-// import 'package:chat_poc/models/User.dart';
-import 'package:chat_poc/models/ChatModel.dart';
+// import './models/User.dart';
+import '../models/ChatModel.dart';
 
 class ChatList extends StatefulWidget {
   final String category;

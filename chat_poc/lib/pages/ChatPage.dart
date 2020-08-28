@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import 'package:chat_poc/models/User.dart';
-import 'package:chat_poc/models/Message.dart';
-import 'package:chat_poc/models/Group.dart';
-import 'package:chat_poc/models/ChatModel.dart';
+import '../models/User.dart';
+import '../models/Message.dart';
+import './ChatList.dart';
+import '../models/ChatModel.dart';
+import '../models/Group.dart';
 
 class ChatPage extends StatefulWidget {
   final User contact;
