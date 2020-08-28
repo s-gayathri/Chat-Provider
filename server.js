@@ -63,14 +63,14 @@ const onMessage = (socket) => {
     // console.log("yo out",socket.rooms);
     socket.on('send_message', (msg) => {
         // console.log("yo in ");
-        let message=json.decode(msg);
+        let message=JSON.stringify(msg);
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
         let content = message.content;
         let time=message.time;
         // let check_online = checkOnline(toID);
 
-        let response = json.encode({
+        let response = JSON.parse({
             'content': content,
             'senderID': fromID,
             'recipientID': toID,
