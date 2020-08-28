@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../models/User.dart';
-import '../models/Message.dart';
-import './ChatList.dart';
-import '../models/ChatModel.dart';
-import '../models/Group.dart';
+import 'package:chat_poc/models/User.dart';
+import 'package:chat_poc/models/Message.dart';
+import 'package:chat_poc/models/Group.dart';
+import 'package:chat_poc/models/ChatModel.dart';
 
 class ChatPage extends StatefulWidget {
-  final User contact;
+  final User contact1;
+  final User contact2;
   final Group group;
 
-  ChatPage({this.contact, this.group});
+  ChatPage({this.contact1, this.contact2, this.group});
 
   @override
-  _ChatPageState createState() =>
-      _ChatPageState(contact: this.contact, group: this.group);
+  _ChatPageState createState() => _ChatPageState(
+      contact1: this.contact1, contact2: this.contact2, group: this.group);
 }
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController myController = TextEditingController();
-  final User contact;
+  final User contact1;
+  final User contact2;
   final Group group;
   String content;
   String roomID;
 
-  _ChatPageState({this.contact, this.group});
+  _ChatPageState({this.contact1, this.contact2, this.group});
 
   void onTextChange() {
     setState(() {
@@ -35,7 +36,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    roomID = (group == null) ? contact.userID : group.groupID;
+    // print('${contact1.name} ${contact2.name}');
+    roomID = (group == null) ? contact2.userID : group.groupID;
 
     myController.addListener(onTextChange);
     super.initState();
@@ -84,7 +86,7 @@ class _ChatPageState extends State<ChatPage> {
               topRight: Radius.circular(15),
               bottomRight: Radius.circular(15),
             ),
-            color: message.senderID == contact.userID
+            color: message.senderID == contact1.userID
                 ? const Color(0x0f1f6b9c)
                 : const Color(0xee0a6da8),
           ),
@@ -98,7 +100,7 @@ class _ChatPageState extends State<ChatPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    message.senderID == contact.userID
+                    message.senderID == contact1.userID
                         ? Text(
                             'You',
                             style: TextStyle(color: const Color(0xee0a6da8)),

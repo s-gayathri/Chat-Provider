@@ -46,6 +46,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ChatModel>(builder: (context, child, model) {
+      // print(model.currentUser);
       return Scaffold(
         bottomNavigationBar: CustomBottomBar(),
         appBar: PreferredSize(
@@ -74,7 +75,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ChatList(category: category),
             ChatPage(
               // group: Group(name: 'Hostels', groupID: "999"),
-              contact: model.currentUser,
+              contact1: Examples.users[0],
+              contact2: Examples.users[1],
             ),
             Center(child: Text('This is the Plugins tab')),
           ],
