@@ -69,8 +69,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           ChatList(category: category),
           ChatPage(
             // group: Group(name: 'Hostels', groupID: "999"),
-            contact1: Examples.users[1],
-            contact2: Examples.users[0],
+            contact1: Examples.users[1],  // Current User
+            contact2: Examples.users[0],  // To User
           ),
           Center(child: Text('This is the Plugins tab')),
         ],
