@@ -42,39 +42,62 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     // return Consumer<ChatModel>(builder: (context, model, child) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomBar(),
+      bottomNavigationBar: Container(
+        height: MediaQuery.of(context).size.height * 0.085,
+        child: CustomBottomBar(),
+      ),
       appBar: PreferredSize(
-        preferredSize:
-            Size(double.infinity, MediaQuery.of(context).size.height / 6.7),
-        child: AppBar(
-          backgroundColor: const Color(0xff0f4d83),
-          leading: Container(),
-          elevation: 0,
-          flexibleSpace: Column(
-            children: [
-              CustomAppBar(
-                title: Examples.directory[category]["title"],
-                subtitle: Examples.directory[category]["subtitle"],
-              ),
-              CustomTabBar(
-                tabs: Examples.myTabs,
-                controller: _tabController,
-              ),
-            ],
+        preferredSize: Size(MediaQuery.of(context).size.width,
+            MediaQuery.of(context).size.height * 0.15),
+        // child: AppBar(
+        //   backgroundColor: const Color(0xff0f4d83),
+        //   leading: Container(),
+        //   elevation: 0,
+        //   flexibleSpace: Column(
+        //     children: [
+        //       CustomAppBar(
+        //         title: Examples.directory[category]["title"],
+        //         subtitle: Examples.directory[category]["subtitle"],
+        //       ),
+        //       CustomTabBar(
+        //         tabs: Examples.myTabs,
+        //         controller: _tabController,
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        child: SafeArea(
+          child: Container(
+            color: const Color(0xff0f4d83),
+            child: Column(
+              children: [
+                CustomAppBar(
+                  title: Examples.directory[category]["title"],
+                  subtitle: Examples.directory[category]["subtitle"],
+                ),
+                CustomTabBar(
+                  tabs: Examples.myTabs,
+                  controller: _tabController,
+                ),
+              ],
+            ),
           ),
         ),
       ),
-      body: TabBarView(
-        children: [
-          ChatList(category: category),
-          ChatPage(
-            // group: Group(name: 'Hostels', groupID: "999"),
-            contact1: Examples.users[1],  // Current User
-            contact2: Examples.users[0],  // To User
-          ),
-          Center(child: Text('This is the Plugins tab')),
-        ],
-        controller: _tabController,
+      body: Container(
+        height: MediaQuery.of(context).size.height * 0.765,
+        child: TabBarView(
+          children: [
+            ChatList(category: category),
+            ChatPage(
+              // group: Group(name: 'Hostels', groupID: "999"),
+              contact1: Examples.users[1], // Current User
+              contact2: Examples.users[0], // To User
+            ),
+            Center(child: Text('This is the Plugins tab')),
+          ],
+          controller: _tabController,
+        ),
       ),
     );
     // });
