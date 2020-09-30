@@ -39,9 +39,15 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     // print('${contact1.name} ${contact2.name}');
     roomID = (group == null) ? contact2.userID : group.groupID;
-    Provider.of<ChatModel>(context, listen: false).init();
-    myController.addListener(onTextChange);
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    Provider.of<ChatModel>(context, listen: true).init();
+    myController.addListener(onTextChange);
+    super.didChangeDependencies();
   }
 
   @override
@@ -163,7 +169,7 @@ class _ChatPageState extends State<ChatPage> {
                 icon: Icon(Icons.send),
                 onPressed: () {
                   model.sendMessage(content, roomID);
-                  setState(() {
+                   setState(() {
                     myController.text = '';
                   });
                 },

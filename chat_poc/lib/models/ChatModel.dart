@@ -27,10 +27,10 @@ class ChatModel extends ChangeNotifier {
 
   Group group = Examples.group;
 
-  List<Message> get getMessages => UnmodifiableListView(messages);
+  // List<Message> get getMessages => UnmodifiableListView(messages);
 
   void init() async {
-    currentUser = users[1]; // run as 1 2 3 in different devices
+    currentUser = users[0]; // run as 1 2 3 in different devices
 
     print('CURRENT USER: ${currentUser.userID}');
 
@@ -43,7 +43,9 @@ class ChatModel extends ChangeNotifier {
     socketIO.subscribe('receive_message', (jsonData) {
       print (jsonData);
       Map<String, dynamic> data = json.decode(jsonData);
-      print(data);
+      print(data["content"]);
+      print(data["senderChatID"]);
+      print(data["receiverChatID"]);
       messages.add(Message(
         content: data["content"],
         senderID: data["senderChatID"],
@@ -51,6 +53,7 @@ class ChatModel extends ChangeNotifier {
         time: DateFormat.jm().format(DateTime.now()),
       ));
       print(messages.length);
+      print(messages);
       notifyListeners();
     });
 
