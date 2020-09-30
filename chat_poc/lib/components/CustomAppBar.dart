@@ -9,23 +9,27 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 7.5,
+      height: MediaQuery.of(context).size.height * 0.1,
       color: const Color(0xff0f4d83),
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 50,
-          bottom: 20,
-          left: 10,
-          right: 10,
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.02,
+          bottom: MediaQuery.of(context).size.height * 0.02,
+          left: MediaQuery.of(context).size.width * 0.025,
+          right: MediaQuery.of(context).size.width * 0.06,
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BackButton(
-              color: Colors.white,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              child: BackButton(
+                color: Colors.white,
+              ),
             ),
             Container(
-              height: MediaQuery.of(context).size.width / 7,
-              width: MediaQuery.of(context).size.width / 7,
+              // height: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.14,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
@@ -37,41 +41,50 @@ class CustomAppBar extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 40,
+              width: MediaQuery.of(context).size.width * 0.025,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.2,
             ),
-            Icon(
-              Icons.search,
-              color: Colors.white,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.05,
+              child: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.05,
             ),
-            Icon(
-              Icons.menu,
-              color: Colors.white,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.05,
+              child: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
             ),
           ],
         ),

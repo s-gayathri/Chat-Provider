@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:chat_poc/models/Examples.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 import 'package:intl/intl.dart';
-import 'package:scoped_model/scoped_model.dart';
 // import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import './User.dart';
@@ -27,10 +25,10 @@ class ChatModel extends ChangeNotifier {
 
   Group group = Examples.group;
 
-  // List<Message> get getMessages => UnmodifiableListView(messages);
+  int getMessages() => messages.length;
 
-  void init() async {
-    currentUser = users[0]; // run as 1 2 3 in different devices
+  void init() {
+    currentUser = users[1]; // run as 1 2 3 in different devices
 
     print('CURRENT USER: ${currentUser.userID}');
 

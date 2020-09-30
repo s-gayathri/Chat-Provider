@@ -1,29 +1,35 @@
 // import 'package:flutter/material.dart';
-// import 'package:chat_poc/components/CustomAppBar.dart';
-// import 'package:chat_poc/components/CustomTabBar.dart';
 
-// class ExtendedAppBar extends StatelessWidget {
-//   List<Tab> tabs;
-//   TabController controller;
+// class ExtendedAppBar extends StatefulWidget implements PreferredSizeWidget {
+//   final List<String> categories;
 
-//   ExtendedAppBar({this.tabs, this.controller});
+//   ExtendedAppBar(this.categories);
+
+//   @override
+//   _ExtendedAppBarState createState() => _ExtendedAppBarState(categories);
+
+//   @override
+//   Size get preferredSize {
+//     return Size(MediaQuery.of(context).size.width,
+//         MediaQuery.of(context).size.height * 0.2);
+//   }
+// }
+
+// class _ExtendedAppBarState extends State<ExtendedAppBar> {
+//   List<String> categories;
+
+//   _ExtendedAppBarState(this.categories);
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return PreferredSize(
-//       preferredSize: Size(double.infinity, 150),
+//     return Container(
 //       child: AppBar(
-//         backgroundColor: const Color(0xff0f4d83),
-//         leading: Container(),
+//         leading:
+//             Container(), // remove if back button is need on the news headlines page
+//         backgroundColor: const Color(0xfffffefe),
 //         elevation: 0,
 //         flexibleSpace: Column(
-//           children: [
-//             CustomAppBar(),
-//             CustomTabBar(
-//               tabs: myTabs,
-//               controller: _tabController,
-//             ),
-//           ],
+//           children: <Widget>[CustomAppBar(), CustomTabBar(categories)],
 //         ),
 //       ),
 //     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 import 'package:chat_poc/models/User.dart';
 import 'package:chat_poc/models/Message.dart';
@@ -39,7 +38,10 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     // print('${contact1.name} ${contact2.name}');
     roomID = (group == null) ? contact2.userID : group.groupID;
-
+    Provider.of<ChatModel>(context, listen: false).init();
+    print(
+        'LENGTH in initState ${Provider.of<ChatModel>(context, listen: false).getMessages()}');
+    myController.addListener(onTextChange);
     super.initState();
   }
 
@@ -58,6 +60,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'LENGTH in build ${Provider.of<ChatModel>(context, listen: false).getMessages()}');
+
     return SafeArea(
       child: Column(
         children: [
