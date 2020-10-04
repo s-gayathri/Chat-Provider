@@ -33,25 +33,25 @@ class ChatModel extends ChangeNotifier {
     print('CURRENT USER: ${currentUser.userID}');
 
     socketIO = SocketIOManager().createSocketIO(
-        'https://calm-savannah-01592.herokuapp.com', '/',
+        'https://calm-savannah-01592.herokuapp.com/', '/',
         query: 'roomID=${currentUser.userID}');
 
     socketIO.init();
 
-    socketIO.subscribe('receive_message', (jsonData) {
-      print (jsonData);
-      Map<String, dynamic> data = json.decode(jsonData);
-      print(data["content"]);
-      print(data["senderChatID"]);
-      print(data["receiverChatID"]);
-      messages.add(Message(
-        content: data["content"],
-        senderID: data["senderChatID"],
-        recipientID: data["receiverChatID"],
-        time: DateFormat.jm().format(DateTime.now()),
-      ));
-      print(messages.length);
-      print(messages);
+    socketIO.subscribe('receive_message', (chats) {
+      // print (jsonData);
+      // Map<String, dynamic> data = json.decode(jsonData);
+      // print(data["content"]);
+      // print(data["senderChatID"]);
+      // print(data["receiverChatID"]);
+      // messages.add(Message(
+      //   content: data["content"],
+      //   senderID: data["senderChatID"],
+      //   recipientID: data["receiverChatID"],
+      //   time: DateFormat.jm().format(DateTime.now()),
+      // ));
+      print(chats.length);
+      print(chats);
       notifyListeners();
     });
 
@@ -59,26 +59,26 @@ class ChatModel extends ChangeNotifier {
   }
 
   void sendMessage(String text, String recipientID) {
-    messages.add(Message(
-      content: text,
-      senderID: currentUser.userID,
-      recipientID: recipientID,
-      isGroup: false, //individual message change  to true when testng for group
-      time: DateFormat.jm().format(DateTime.now()),
-    ));
+    // messages.add(Message(
+    //   content: text,
+    //   senderID: currentUser.userID,
+    //   recipientID: recipientID,
+    //   isGroup: false, //individual message change  to true when testng for group
+    //   time: DateFormat.jm().format(DateTime.now()),
+    // ));
 
     socketIO.sendMessage(
       'send_message',
-      json.encode({
+      {
         'receiverChatID': recipientID,
         'senderChatID': currentUser.userID,
         'content': text,
         'time': DateFormat.jm().format(DateTime.now()),
         'isGroup':
             false, //individual message change  to true when testng for group
-      }),
+      },
     );
-    print(messages.length);
+     
 
     notifyListeners();
   }

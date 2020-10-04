@@ -25,27 +25,25 @@
   <script >
     $(function(){
       const socket=io({
-          query:{roomID:"2002"}
+          query:{roomID:"1001"}
 
       });
       const response= {
-        receiverChatID: "1001",
-        senderChatID: "2002",
-        content: "helo21",
+        receiverChatID: "2002",
+        senderChatID: "1001",
+        content: "yolo12",
         time:"1233"
       };
       socket.emit("send_message",response);
-      // socket.on('messageSuccess',function(chats){
-      //   chats.forEach(chat=>{
-      //     document.write(chat.content);
-      //   });
+      // socket.on('messageSuccess',function(msg){
+      //   document.write(msg.content);
       // })
 
       socket.on("receive_message",(chats)=>{
 
         chats.forEach(chat=>{
           document.write(chat.content);
-        });
+        })
       }
 
       )

@@ -3,33 +3,32 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const  bodyParser=require('body-parser');
+const Chat=require('./models/ChatSchema');
+const connect=require('./dbconnection');
+const events = require('./constants');
  
-
+ 
 const PORT = process.env.PORT || 3000;
 
 // Importing user-defined events for socket as a map
-const events = require('./constants');
  
 
 app.get('/', (req, res) => {
-    res.send("Server is running");
+    
+    res.sendFile(__dirname+"/index1.html");
 
     // console.log("hey");
 
 
 });
+app.get("/e",(req,res)=>{
+    res.sendFile(__dirname+"/index2.html");
+})
 
 io.on("connection", (socket) => {
-
-    initializeOnConnect(socket);
-});
-
-
-
-const initializeOnConnect = (socket) => {
-    // When a user logs in
-
-    // console.log(`NEW USER: ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
+ 
+    console.log(`NEW USER:USER connected   ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
 
     var roomID =  socket.handshake.query.roomID;
 
@@ -54,15 +53,11 @@ const initializeOnConnect = (socket) => {
 
     socket.join(roomID);
     // When the users sends a message
-    onMessage(socket);
-    // When the user logs out
-    disposeOnDisconnect(socket,roomID);
-}
+    console.log("pls");
 
-const onMessage = (socket) => {
-    // console.log("yo out",socket.rooms);
     socket.on('send_message', (message) => {
-        // console.log("yo in ");
+       
+        console.log("yo in ");
         
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
@@ -78,8 +73,26 @@ const onMessage = (socket) => {
             "time":time
         } ;
         
-        // console.log(`CHAT From-${fromID} To-${toID} is Online-${check_online} Message-${content}`);
-
+        console.log(`CHAT From-${fromID} To-${toID} is Online-Message-${content} and ${time}`);
+        connect.then(db  =>  {
+            console.log("connected correctly to the DB");
+        
+            let  chat1 =  new Chat({
+                content: content,
+                senderChatID: fromID,
+                receiverChatID: toID,
+                time:time
+            });
+            chat1.save(function (err, chat) {
+                if (err) return console.error(err);
+                else{
+                    console.log("saved to DB");
+                    onMessage(socket,toID,fromID);
+                }
+              });
+               
+            });
+             
         // Store in database
 
         // Send message
@@ -87,9 +100,34 @@ const onMessage = (socket) => {
         // message.recipientIsOnline = check_online;
 
         // if(check_online){ 
-            io.sockets.in(toID).emit('receive_message', response);
+            // io.sockets.in(toID).emit('receive_message', response);
         // }
-    })
+    });
+    
+    // Chat.find(function (err, chats) {
+    //     if (err) return console.error(err);
+    //     console.log(chats);
+    //     io.sockets.in(roomID).emit('receive_message', chats);
+
+    //   });
+    
+    
+    // When the user logs out
+    disposeOnDisconnect(socket,roomID);
+})
+
+const onMessage = (socket,to_id,from_id) => {
+    
+    Chat.find(function (err, chats) {
+        if (err) return console.error(err);
+        console.log(chats);
+        io.sockets.in(to_id).emit('receive_message', chats);
+        io.sockets.in(from_id).emit('receive_message', chats);
+
+      });
+    // console.log("yo out",socket.rooms);
+    
+    
     // socket.on(events.INDIVIDUAL_CHAT_MESSAGE, (message) => {
     //     individualChatHandler(socket, message);
     // });
@@ -111,8 +149,9 @@ const checkOnline = (roomID) => {
 
 const disposeOnDisconnect = (socket,roomID) => {
     socket.on(events.ON_DISCONNECT, () => {
+        
         socket.leave(roomID);
-        // console.log(`USER DISCONNECTED with socketID ${socket.id}`);
+        console.log(`USER DISCONNECTED with socketID ${socket.id}`);
         // socket.removeAllListeners(events.ON_DISCONNECT);
         // if (rooms.size != 0) {
             
@@ -146,7 +185,7 @@ const disposeOnDisconnect = (socket,roomID) => {
 }
 
 server.listen(PORT, () => {
-    // console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
 
