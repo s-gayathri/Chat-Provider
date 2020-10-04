@@ -160,12 +160,16 @@ class _ChatPageState extends State<ChatPage> {
           color: Colors.white,
           child: Row(
             children: [
-              Icon(Icons.attach_file),
-              Container(
-                margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: TextField(
-                  controller: myController,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.attach_file),
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                  child: TextField(
+                    controller: myController,
+                  ),
                 ),
               ),
               Icon(Icons.mic_none),
