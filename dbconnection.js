@@ -1,6 +1,7 @@
+require('dotenv').config()
 const  mongoose  = require("mongoose");
-mongoose.Promise  = require("bluebird");
-const  url  =  "mongodb+srv://emily:test987@cluster0.a25bs.azure.mongodb.net/chatDB?retryWrites=true&w=majority";
+ 
+const  url  =  "mongodb+srv://"+process.env.USER+":"+process.env.PWD+"@cluster0.a25bs.azure.mongodb.net/chatDB?retryWrites=true&w=majority";
 const connect=mongoose.connect(url, { useNewUrlParser: true ,useUnifiedTopology:true});
 module.exports=connect;
  

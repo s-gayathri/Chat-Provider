@@ -1,5 +1,6 @@
  // Setting up the server and linking it to socket.io
-const express = require('express');
+ require('dotenv').config()
+ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
@@ -16,7 +17,7 @@ const PORT = process.env.PORT || 3000;
  
 io.on("connection", (socket) => {
  
-    // console.log(`NEW USER:USER connected   ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
+    console.log(`NEW USER:USER connected   ${JSON.stringify(socket.handshake.query )} with socketID - ${socket.id}`);
 
     var roomID =  socket.handshake.query.roomID;
 
@@ -26,7 +27,7 @@ io.on("connection", (socket) => {
     // When the users sends a message
     socket.on('send_message', (message) => {
        
-        // console.log("yo in ");
+        console.log("yo in ");
         
         let toID = message.receiverChatID;
         let fromID = message.senderChatID;
@@ -44,7 +45,7 @@ io.on("connection", (socket) => {
         
         // console.log(`CHAT From-${fromID} To-${toID} is Online-Message-${content} and ${time}`);
         connect.then(db  =>  {
-            // console.log("connected correctly to the DB");
+            console.log("connected correctly to the DB");
         
             let  chat1 =  new Chat({
                 content: content,
@@ -81,7 +82,7 @@ const onMessage = (socket,to_id,from_id) => {
     
     Chat.find(function (err, chats) {
         if (err) return console.error(err);
-        // console.log(chats);
+        console.log(chats);
         io.sockets.in(to_id).emit('receive_message', chats);
         io.sockets.in(from_id).emit('receive_message', chats);
 
@@ -103,7 +104,7 @@ const disposeOnDisconnect = (socket,roomID) => {
     socket.on(events.ON_DISCONNECT, () => {
         
         socket.leave(roomID);
-        // console.log(`USER DISCONNECTED with socketID ${socket.id}`);
+        console.log(`USER DISCONNECTED with socketID ${socket.id}`);
         // socket.removeAllListeners(events.ON_DISCONNECT);
         // if (rooms.size != 0) {
             

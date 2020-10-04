@@ -37,13 +37,11 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-
+chat_poc/** 
 # Dependency directories
 node_modules/
 jspm_packages/
-bkend/
-flutter/
-
+ 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
@@ -118,4 +116,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-/chat_poc/
+ 
