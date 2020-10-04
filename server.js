@@ -12,7 +12,9 @@ const events = require('./constants');
 const PORT = process.env.PORT || 3000;
 
 // Importing user-defined events for socket as a map
- 
+app.get("/",function(req,res){
+    res.send(" `Server is running  ");
+}) 
 
  
 io.on("connection", (socket) => {
